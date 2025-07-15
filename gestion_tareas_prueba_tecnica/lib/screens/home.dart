@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gestion_tareas_prueba_tecnica/controller/home_controller.dart';
 import 'package:gestion_tareas_prueba_tecnica/controller/todo_controller.dart';
 import 'package:gestion_tareas_prueba_tecnica/model/todo_model.dart';
 import 'package:gestion_tareas_prueba_tecnica/model/todo_state.dart';
@@ -20,6 +21,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final todoController = TodoController();
+  final homeController = HomeController();
+   
   List<TodoModel> todoList = List.empty();
   List<TodoModel> todoListFiltered = List.empty();
   TodoState? stateFilter;
@@ -76,50 +79,24 @@ class _HomeState extends State<Home> {
 
   void reloadList() {
     setState(() {
-      todoList = todoController.getTodos();
+      todoList = homeController.getTodos();
     });
     reloadListFilter();
   }
 
   void reloadListFilter() {
     setState(() {
-      todoListFiltered = todoList.where((i) => stateFilter == null
-          ? true
-          : (stateFilter == TodoState.Completadas)
-              ? i.isCompleted
-              : !i.isCompleted).toList();
-      todoListFiltered.sort((a,b) {
-                if(a == b) return 0;
-                if(b.isCompleted){
-                  return -1;
-                }
-                return 1;
-              });
+      todoListFiltered = homeController.filterTodos(todoList, stateFilter);
     });
   }
     void _handleTodoClicked(TodoModel todoModel) {
-    todoModel.updateIsCompleted();
-    todoController.updateTodo(todoModel);
+      homeController.toggleTodoCompleted(todoModel);
     reloadList();
   }
 
   void _handleSearchFilter(String value) {
     setState(() {
-      todoListFiltered = todoList
-          .where((t) =>
-              t.title?.toLowerCase().contains(value.toLowerCase()) == true ||
-              t.description?.toLowerCase().contains(value.toLowerCase()) ==
-                  true)
-          .toList();
-
-      todoListFiltered.sort((a,b) {
-          if(a.isCompleted == b.isCompleted) return 0;
-
-          if(b.isCompleted){
-            return 1;
-          } 
-          return -1;
-      });
+      todoListFiltered = homeController.searchTodos(todoList, value);
     });
   }
 
@@ -153,7 +130,7 @@ class _HomeState extends State<Home> {
           ),
           TextButton(
             onPressed: () {
-              todoController.deleteTodo(todoModel.id);
+              homeController.deleteTodo(todoModel.id ?? 0);
               Navigator.pop(context, 'Ok');
               reloadList();
             },

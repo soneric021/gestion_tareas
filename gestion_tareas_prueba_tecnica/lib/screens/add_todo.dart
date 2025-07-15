@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gestion_tareas_prueba_tecnica/controller/add_todo_controller.dart';
 import 'package:gestion_tareas_prueba_tecnica/controller/todo_controller.dart';
 import 'package:gestion_tareas_prueba_tecnica/model/todo_model.dart';
 import 'package:gestion_tareas_prueba_tecnica/utils/theme.dart';
@@ -22,6 +23,7 @@ class _AddTodoState extends State<AddTodo> {
   final limitController = TextEditingController();
   final todoController = TodoController();
   DateTime? selectedDate;
+  final _controller = AddTodoController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +75,7 @@ class _AddTodoState extends State<AddTodo> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (widget.todoItem == null) {
-                      saveTodo();
-                    } else {
-                      updateTodo();
-                    }
+                    _handleTodoInsert();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
@@ -97,40 +95,23 @@ class _AddTodoState extends State<AddTodo> {
     );
   }
 
-  Future<void> saveTodo() async {
-    if(titleController.text.isEmpty){
-        Fluttertoast.showToast(
-          msg: "Debes agregar un titulo.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
+  Future<void> _handleTodoInsert() async {
+    if (!_controller.validateTitle(titleController.text)) {
+      Fluttertoast.showToast(msg: "Debes agregar un título");
       return;
     }
 
-    final todo = TodoModel(
-      title: titleController.text,
-      description: descriptionController.text,
-      limit: limitController.text,
-    );
-    await todoController.saveTodo(todo);
+    if (widget.todoItem == null) {
+      await _controller.saveTodo(
+          titleController.text, descriptionController.text,
+          limitController.text);
+    } else {
+      await _controller.updateTodo(
+          widget.todoItem!, titleController.text, descriptionController.text,
+          limitController.text);
+    }
     Navigator.of(context).pop();
   }
-
-  Future<void> updateTodo() async {
-    final todo = widget.todoItem;
-    if (todo == null) return;
-    todo.updateFields({
-      "title": titleController.text,
-      "description": descriptionController.text,
-      "limit": limitController.text,
-    });
-    await todoController.updateTodo(todo);
-    Navigator.of(context).pop();
-  }
-
   Future<void> _handleDateDialog() async {
     final pickedDate = await showDatePicker(
       context: context,
@@ -154,3 +135,5 @@ class _AddTodoState extends State<AddTodo> {
     super.initState();
   }
 }
+
+
