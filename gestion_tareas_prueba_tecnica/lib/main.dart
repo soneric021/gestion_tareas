@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gestion_tareas_prueba_tecnica/controller/theme_controller.dart';
 import 'package:gestion_tareas_prueba_tecnica/model/todo_model.dart';
-import 'package:gestion_tareas_prueba_tecnica/screens/add_todo.dart';
 import 'package:gestion_tareas_prueba_tecnica/screens/home.dart';
 import 'package:gestion_tareas_prueba_tecnica/utils/constants.dart';
 import 'package:gestion_tareas_prueba_tecnica/utils/theme_notifier.dart';
 import 'package:hive/hive.dart' show Hive;
 import 'package:hive_flutter/adapters.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'utils/theme.dart';
 

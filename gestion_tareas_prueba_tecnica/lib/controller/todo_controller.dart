@@ -1,8 +1,9 @@
 import 'package:gestion_tareas_prueba_tecnica/model/todo_model.dart';
+import 'package:gestion_tareas_prueba_tecnica/utils/constants.dart';
 import 'package:hive/hive.dart';
 
 class TodoController {
-  final _todoManagerBox = Hive.box("todo_manager");
+  final _todoManagerBox = Hive.box(Constants.TODO_MANAGER);
 
   Future<void> saveTodo(TodoModel todoModel) async {
     await _todoManagerBox.add(todoModel.toJson());

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gestion_tareas_prueba_tecnica/controller/todo_controller.dart';
 import 'package:gestion_tareas_prueba_tecnica/model/todo_model.dart';
@@ -10,8 +9,7 @@ import 'package:gestion_tareas_prueba_tecnica/utils/theme.dart';
 import 'package:gestion_tareas_prueba_tecnica/widgets/filter_chips.dart';
 import 'package:gestion_tareas_prueba_tecnica/widgets/search_box.dart';
 import 'package:gestion_tareas_prueba_tecnica/widgets/theme_switch.dart';
-import 'package:gestion_tareas_prueba_tecnica/widgets/todo_item.dart';
-import 'package:gestion_tareas_prueba_tecnica/widgets/todo_list.dart'; // Asegúrate de importar tu archivo de tema
+import 'package:gestion_tareas_prueba_tecnica/widgets/todo_list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -30,7 +28,6 @@ class _HomeState extends State<Home> {
  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final todoColors = theme.extension<TodoColors>()!;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -70,7 +67,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  
+
   @override
   void initState() {
     reloadList();
@@ -183,5 +180,4 @@ class _HomeState extends State<Home> {
     await CsvExporter.exportTodoToCsv(todoList);
   }
 
- 
 }
