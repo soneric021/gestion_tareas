@@ -1,0 +1,3 @@
+enum TodoState {
+  Pendientes, Completadas
+}
